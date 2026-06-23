@@ -60,6 +60,7 @@ class TaskController extends Controller
             'due_date' => 'nullable|date|after_or_equal:today',
         ]);
 
+        // dd($request->all());
         $task->update([
             'title' => $request->title,
             'description' => $request->description,

@@ -8,7 +8,7 @@ const CreateTask = ({ projects, users }) => {
         status: "pending",
         priority: "medium",
         project_id: "",
-        assigned_user_id: "",
+        assigned_to: "",
     });
 
     const handleSubmit = (e) => {
@@ -106,13 +106,13 @@ const CreateTask = ({ projects, users }) => {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="assigned_user_id">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="assigned_to">
                             Assign To
                         </label>
                         <select
-                            name="assigned_user_id"
-                            value={data.assigned_user_id}
-                            onChange={e => setData('assigned_user_id', e.target.value)}
+                            name="assigned_to"
+                            value={data.assigned_to}
+                            onChange={e => setData('assigned_to', e.target.value)}
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         >
                             <option value="">Unassigned</option>
@@ -122,7 +122,7 @@ const CreateTask = ({ projects, users }) => {
                                 </option>
                             ))}
                         </select>
-                        {errors.assigned_user_id && <div className="text-red-500 text-xs mt-1">{errors.assigned_user_id}</div>}
+                        {errors.assigned_to && <div className="text-red-500 text-xs mt-1">{errors.assigned_to}</div>}
                     </div>
 
                     <div className="flex justify-end gap-2 mt-4">
