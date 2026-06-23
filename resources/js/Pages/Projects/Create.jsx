@@ -17,7 +17,7 @@ const Create = () => {
     return (
         <DashboardLayout>
         <div>
-            <h1>create project</h1>
+            <h1 className="text-2xl font-bold mb-4 ">create project</h1>
             <Link href="/projects" className="text-blue-500 hover:text-blue-700 mb-4 inline-block">
                 Back to Projects
             </Link>

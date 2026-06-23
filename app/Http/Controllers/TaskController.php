@@ -9,7 +9,12 @@ use Inertia\Inertia;
 class TaskController extends Controller
 {
     public function index(){
-        $tasks = Task::with('project', 'assignedUser')->get();
+        $user = auth()->user();
+        $tasks = Task::with('project', 'assignedUser')
+            ->when(!$user->isAdmin(), function($query) use ($user){
+                $query->where('assigned_to', $user->id);
+            })
+            ->get();
         return inertia('Tasks/Index', ['tasks' => $tasks]);
     }
 
@@ -44,7 +49,7 @@ class TaskController extends Controller
     }
 
     public function edit(Task $task){
-        $projects = \App\Models\Project::all();
+        $projects = \App\Models\Project::all();  
         $users = \App\Models\User::all()->except(auth()->id());
         return inertia('Tasks/Edit', ['task' => $task, 'projects' => $projects, 'users' => $users]);
     }

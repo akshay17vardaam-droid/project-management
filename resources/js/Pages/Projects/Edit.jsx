@@ -18,12 +18,10 @@ const Edit = ({ project }) => {
     return (
         <DashboardLayout>
             <div>
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold mb-4">Edit Project</h1>
-                    <Link href="/projects" className="text-blue-500 hover:text-blue-700 mb-4 inline-block">
-                        Back to Projects
-                    </Link>
-                </div>
+                <h1 className="text-2xl font-bold mb-4">Edit Project</h1>
+                <Link href="/projects" className="text-blue-500 hover:text-blue-700 mb-4 inline-block">
+                    Back to Projects
+                </Link>
                 
                 <form onSubmit={handleSubmit} className="w-full max-w-lg flex flex-col gap-4 bg-white p-6 rounded-lg shadow-md">
                     <div>

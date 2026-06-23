@@ -1,5 +1,5 @@
 import DashboardLayout from "@/Layouts/DashboardLayout";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 
 const EditTask = ({ task, projects, users }) => {
     const { data, setData, put, processing, errors } = useForm({
@@ -20,6 +20,9 @@ const EditTask = ({ task, projects, users }) => {
         <DashboardLayout>
             <div className="max-w-md mx-auto mt-10">
                 <h1 className="text-2xl font-bold mb-6">Edit Task</h1>
+                <Link href = '/tasks' className = "text-blue-500 hover:text-blue-700 mb-4 inline-block">
+                back to tasks
+                </Link>
                 
                 <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col gap-4">
                     <div>
