@@ -19,7 +19,12 @@ const Index = ({ projects }) => {
                         Create New Project
                     </Link>
                 </div>
-                
+
+                {projects.length === 0 ? (
+                    <div className="text-center bg-gray-100 border ">
+                        <p>no project found. first create one project!</p>
+                    </div>
+                ): (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {projects.map((project) => (
                         <div key={project.id} className="bg-white p-4 rounded-lg shadow-sm hover:shadow-lg transition duration-200 flex flex-col justify-between">
@@ -48,6 +53,7 @@ const Index = ({ projects }) => {
                         </div>
                     ))}
                 </div>
+                )}
             </div>
         </DashboardLayout>
     );
