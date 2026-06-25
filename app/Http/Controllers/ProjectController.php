@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Project;
-use App\Models\Team;
 use App\Models\Client;
+use App\Models\Project;
 use App\Models\Tag;
+use App\Models\Team;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -16,12 +16,12 @@ class ProjectController extends Controller
     private function getFormData(): array
     {
         return [
-            'teams'        => Team::select('id', 'name')->get(),
-            'clients'      => Client::select('id', 'name')->get(),
-            'tags'         => Tag::select('id', 'name')->get(),
-            'users'        => User::select('id', 'name')->get(),
-            'admins'       => User::select('id', 'name')->where('role', 'admin')->get(),
-            'taskViews'    => ['technical', 'external', 'organizational'],
+            'teams' => Team::select('id', 'name')->get(),
+            'clients' => Client::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get(),
+            'users' => User::select('id', 'name')->get(),
+            'admins' => User::select('id', 'name')->where('role', 'admin')->get(),
+            'taskViews' => ['technical', 'external', 'organizational'],
             'privacyOptions' => ['Data Privacy One', 'Data Privacy Two', 'Data Privacy Three'],
         ];
     }
@@ -35,6 +35,11 @@ class ProjectController extends Controller
             'projectLead',
             'users',
             'tags',
+        ])->withCount([
+            'tasks',
+            'tasks as completed_tasks_count' => function ($q) {
+                $q->where('status', 'completed');
+            },
         ])->get();
 
         return Inertia::render('Projects/Index', [
@@ -52,45 +57,45 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string',
-            'status'            => 'required|in:active,completed,on-hold',
-            'privacy'           => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,completed,on-hold',
+            'privacy' => 'nullable|string',
             'default_task_view' => 'nullable|string',
-            'team_id'           => 'nullable|exists:teams,id',
-            'project_lead_id'   => 'nullable|exists:users,id',
-            'start_date'        => 'nullable|date',
-            'end_date'          => 'nullable|date|after_or_equal:start_date',
-            'description'       => 'nullable|string',  // project overview
-            'client_id'         => 'nullable|exists:clients,id',
-            'budget'            => 'nullable|numeric|min:0',
-            'people'            => 'nullable|array',
-            'people.*'          => 'exists:users,id',
-            'tags'              => 'nullable|array',
-            'tags.*'            => 'exists:tags,id',
+            'team_id' => 'nullable|exists:teams,id',
+            'project_lead_id' => 'nullable|exists:users,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'description' => 'nullable|string',  // project overview
+            'client_id' => 'nullable|exists:clients,id',
+            'budget' => 'nullable|numeric|min:0',
+            'people' => 'nullable|array',
+            'people.*' => 'exists:users,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         $project = Project::create([
-            'name'              => $validated['name'],
-            'description'       => $validated['description'] ?? null,
-            'status'            => $validated['status'],
-            'privacy'           => $validated['privacy'] ?? null,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'status' => $validated['status'],
+            'privacy' => $validated['privacy'] ?? null,
             'default_task_view' => $validated['default_task_view'] ?? null,
-            'team_id'           => $validated['team_id'] ?? null,
-            'project_lead_id'   => $validated['project_lead_id'] ?? null,
-            'start_date'        => $validated['start_date'] ?? null,
-            'end_date'          => $validated['end_date'] ?? null,
-            'client_id'         => $validated['client_id'] ?? null,
-            'budget'            => $validated['budget'] ?? null,
-            'created_by'        => auth()->id(),
+            'team_id' => $validated['team_id'] ?? null,
+            'project_lead_id' => $validated['project_lead_id'] ?? null,
+            'start_date' => $validated['start_date'] ?? null,
+            'end_date' => $validated['end_date'] ?? null,
+            'client_id' => $validated['client_id'] ?? null,
+            'budget' => $validated['budget'] ?? null,
+            'created_by' => auth()->id(),
         ]);
 
         // Sync pivot tables
-        if (!empty($validated['people'])) {
+        if (! empty($validated['people'])) {
             $project->users()->sync($validated['people']);
         }
 
-        if (!empty($validated['tags'])) {
+        if (! empty($validated['tags'])) {
             $project->tags()->sync($validated['tags']);
         }
 
@@ -107,8 +112,8 @@ class ProjectController extends Controller
             $this->getFormData(),
             [
                 'project' => array_merge($project->toArray(), [
-                    'people'  => $project->users->pluck('id'),
-                    'tags'    => $project->tags->pluck('id'),
+                    'people' => $project->users->pluck('id'),
+                    'tags' => $project->tags->pluck('id'),
                 ]),
             ]
         ));
@@ -118,35 +123,35 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string',
-            'status'            => 'required|in:active,completed,on-hold',
-            'privacy'           => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,completed,on-hold',
+            'privacy' => 'nullable|string',
             'default_task_view' => 'nullable|string',
-            'team_id'           => 'nullable|exists:teams,id',
-            'project_lead_id'   => 'nullable|exists:users,id',
-            'start_date'        => 'nullable|date',
-            'end_date'          => 'nullable|date|after_or_equal:start_date',
-            'client_id'         => 'nullable|exists:clients,id',
-            'budget'            => 'nullable|numeric|min:0',
-            'people'            => 'nullable|array',
-            'people.*'          => 'exists:users,id',
-            'tags'              => 'nullable|array',
-            'tags.*'            => 'exists:tags,id',
+            'team_id' => 'nullable|exists:teams,id',
+            'project_lead_id' => 'nullable|exists:users,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'client_id' => 'nullable|exists:clients,id',
+            'budget' => 'nullable|numeric|min:0',
+            'people' => 'nullable|array',
+            'people.*' => 'exists:users,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:tags,id',
         ]);
 
         $project->update([
-            'name'              => $validated['name'],
-            'description'       => $validated['description'] ?? null,
-            'status'            => $validated['status'],
-            'privacy'           => $validated['privacy'] ?? null,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'status' => $validated['status'],
+            'privacy' => $validated['privacy'] ?? null,
             'default_task_view' => $validated['default_task_view'] ?? null,
-            'team_id'           => $validated['team_id'] ?? null,
-            'project_lead_id'   => $validated['project_lead_id'] ?? null,
-            'start_date'        => $validated['start_date'] ?? null,
-            'end_date'          => $validated['end_date'] ?? null,
-            'client_id'         => $validated['client_id'] ?? null,
-            'budget'            => $validated['budget'] ?? null,
+            'team_id' => $validated['team_id'] ?? null,
+            'project_lead_id' => $validated['project_lead_id'] ?? null,
+            'start_date' => $validated['start_date'] ?? null,
+            'end_date' => $validated['end_date'] ?? null,
+            'client_id' => $validated['client_id'] ?? null,
+            'budget' => $validated['budget'] ?? null,
         ]);
 
         // Sync pivot tables
