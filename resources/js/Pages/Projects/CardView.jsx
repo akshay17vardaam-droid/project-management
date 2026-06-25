@@ -1,18 +1,19 @@
 import { useState, useMemo } from "react";
 import { Link, router } from "@inertiajs/react";
 import DashboardLayout from "@/Layouts/DashboardLayout";
+import { List, LayoutGrid } from "lucide-react";
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
 const STATUS_STYLES = {
-    completed:  { bar: "bg-green-500",  badge: "border-green-400 text-green-600",   label: "COMPLETED"  },
-    active:     { bar: "bg-blue-500",   badge: "border-blue-400 text-blue-600",     label: "ACTIVE"     },
-    ongoing:    { bar: "bg-blue-500",   badge: "border-blue-400 text-blue-600",     label: "ONGOING"    },
-    "on-hold":  { bar: "bg-orange-400", badge: "border-orange-400 text-orange-500", label: "INACTIVE"   },
-    inactive:   { bar: "bg-orange-400", badge: "border-orange-400 text-orange-500", label: "INACTIVE"   },
-    cancelled:  { bar: "bg-gray-400",   badge: "border-gray-400 text-gray-500",     label: "CANCELLED"  },
-    critical:   { bar: "bg-red-500",    badge: "border-red-400 text-red-500",       label: "CRITICAL"   },
-    postponed:  { bar: "bg-purple-400", badge: "border-purple-400 text-purple-500", label: "POSTPONED"  },
-    finished:   { bar: "bg-green-500",  badge: "border-green-400 text-green-600",   label: "FINISHED"   },
+    completed: { bar: "bg-green-500", badge: "border-green-400 text-green-600", label: "COMPLETED" },
+    active: { bar: "bg-blue-500", badge: "border-blue-400 text-blue-600", label: "ACTIVE" },
+    ongoing: { bar: "bg-blue-500", badge: "border-blue-400 text-blue-600", label: "ONGOING" },
+    "on-hold": { bar: "bg-orange-400", badge: "border-orange-400 text-orange-500", label: "INACTIVE" },
+    inactive: { bar: "bg-orange-400", badge: "border-orange-400 text-orange-500", label: "INACTIVE" },
+    cancelled: { bar: "bg-gray-400", badge: "border-gray-400 text-gray-500", label: "CANCELLED" },
+    critical: { bar: "bg-red-500", badge: "border-red-400 text-red-500", label: "CRITICAL" },
+    postponed: { bar: "bg-purple-400", badge: "border-purple-400 text-purple-500", label: "POSTPONED" },
+    finished: { bar: "bg-green-500", badge: "border-green-400 text-green-600", label: "FINISHED" },
 };
 
 function getStatus(status) {
@@ -22,11 +23,11 @@ function getStatus(status) {
 }
 
 // ─── Avatar stack ─────────────────────────────────────────────────────────────
-const AVATAR_COLORS = ["bg-blue-400","bg-pink-400","bg-orange-400","bg-green-400","bg-purple-400"];
+const AVATAR_COLORS = ["bg-blue-400", "bg-pink-400", "bg-orange-400", "bg-green-400", "bg-purple-400"];
 
 function AvatarStack({ users = [] }) {
     const visible = users.slice(0, 3);
-    const extra   = users.length - 3;
+    const extra = users.length - 3;
     return (
         <div className="flex items-center -space-x-2">
             {visible.map((u, i) => (
@@ -45,23 +46,23 @@ function AvatarStack({ users = [] }) {
 }
 
 // ─── Filter tabs ──────────────────────────────────────────────────────────────
-const TABS = ["All","Ongoing","Cancelled","Finished","Postponed"];
+const TABS = ["All", "Ongoing", "Cancelled", "Finished", "Postponed"];
 const TAB_MATCH = {
-    ongoing:   p => ["active","ongoing"].includes(p.status?.toLowerCase()),
+    ongoing: p => ["active", "ongoing"].includes(p.status?.toLowerCase()),
     cancelled: p => p.status?.toLowerCase() === "cancelled",
-    finished:  p => ["completed","finished"].includes(p.status?.toLowerCase()),
-    postponed: p => ["on-hold","postponed"].includes(p.status?.toLowerCase()),
+    finished: p => ["completed", "finished"].includes(p.status?.toLowerCase()),
+    postponed: p => ["on-hold", "postponed"].includes(p.status?.toLowerCase()),
 };
 
 // ─── Single Project Card ──────────────────────────────────────────────────────
 function ProjectCard({ project, onDelete }) {
-    const st  = getStatus(project.status);
+    const st = getStatus(project.status);
     const total = project.tasks_count ?? 0;
-    const done  = project.completed_tasks_count ?? 0;
-    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+    const done = project.completed_tasks_count ?? 0;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
     const fmt = (d) => d
-        ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" })
+        ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
         : "—";
 
     return (
@@ -153,10 +154,13 @@ function ProjectCard({ project, onDelete }) {
 // ─── Main CardView Page ───────────────────────────────────────────────────────
 const ITEMS_PER_PAGE = 8;
 
+
 export default function CardView({ projects = [] }) {
-    const [tab, setTab]       = useState("All");
+    const [tab, setTab] = useState("All");
     const [search, setSearch] = useState("");
-    const [page, setPage]     = useState(1);
+    const [page, setPage] = useState(1);
+    const currentPath = window.location.pathname;
+
 
     const handleDelete = (id, name) => {
         if (confirm(`Delete "${name}"?`)) {
@@ -165,10 +169,10 @@ export default function CardView({ projects = [] }) {
     };
 
     const counts = useMemo(() => ({
-        All:       projects.length,
-        Ongoing:   projects.filter(TAB_MATCH.ongoing).length,
+        All: projects.length,
+        Ongoing: projects.filter(TAB_MATCH.ongoing).length,
         Cancelled: projects.filter(TAB_MATCH.cancelled).length,
-        Finished:  projects.filter(TAB_MATCH.finished).length,
+        Finished: projects.filter(TAB_MATCH.finished).length,
         Postponed: projects.filter(TAB_MATCH.postponed).length,
     }), [projects]);
 
@@ -186,7 +190,7 @@ export default function CardView({ projects = [] }) {
     }, [projects, tab, search]);
 
     const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-    const paginated  = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     return (
         <DashboardLayout>
@@ -233,8 +237,8 @@ export default function CardView({ projects = [] }) {
 
                     {/* Search + view toggles */}
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 w-52">
-                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <div className="relative w-52">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
                             </svg>
                             <input
@@ -242,7 +246,7 @@ export default function CardView({ projects = [] }) {
                                 placeholder="Search projects"
                                 value={search}
                                 onChange={e => { setSearch(e.target.value); setPage(1); }}
-                                className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+                                className="w-full pl-10 pr-3 py-2 border-gray-200 rounded-lg bg-white border !ring-0 !shadow-none"
                             />
                         </div>
 
@@ -250,18 +254,20 @@ export default function CardView({ projects = [] }) {
                         <div className="flex items-center gap-1">
                             {/* List view */}
                             <Link href={route('projects.index')}>
-                                <button className="p-2 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                    </svg>
+                                <button className={`p-2 rounded-lg border transition-colors ${currentPath === "/projects"
+                                        ? "bg-gray-800 text-white border-gray-800"
+                                        : "bg-white text-gray-500 border-gray-200"
+                                    }`}>
+                                    <List size={16} />
                                 </button>
                             </Link>
-                            {/* Card view — active */}
+
                             <Link href={route('projects.card')}>
-                                <button className="p-2 rounded-lg border border-gray-200 bg-gray-800 text-white transition-colors">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z" />
-                                    </svg>
+                                <button className={`p-2 rounded-lg border transition-colors ${currentPath === "/projects/card"
+                                        ? "bg-gray-800 text-white border-gray-800"
+                                        : "bg-white text-gray-500 border-gray-200"
+                                    }`}>
+                                    <LayoutGrid size={16} />
                                 </button>
                             </Link>
                         </div>

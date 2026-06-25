@@ -1,18 +1,20 @@
 import { useState, useMemo } from "react";
 import { Link, router } from "@inertiajs/react";
 import DashboardLayout from "@/Layouts/DashboardLayout";
+import { List, LayoutGrid } from "lucide-react";
+
 
 // ─── Status badge config ──────────────────────────────────────────────────────
 const STATUS_STYLES = {
-    completed:  "border border-green-400 text-green-600 bg-white",
-    active:     "border border-blue-400 text-blue-600 bg-white",
-    ongoing:    "border border-blue-400 text-blue-600 bg-white",
-    "on-hold":  "border border-orange-400 text-orange-500 bg-white",
-    inactive:   "border border-orange-400 text-orange-500 bg-white",
-    cancelled:  "border border-gray-400 text-gray-500 bg-white",
-    critical:   "border border-red-400 text-red-500 bg-white",
-    postponed:  "border border-purple-400 text-purple-500 bg-white",
-    finished:   "border border-green-400 text-green-600 bg-white",
+    completed: "border border-green-400 text-green-600 bg-white",
+    active: "border border-blue-400 text-blue-600 bg-white",
+    ongoing: "border border-blue-400 text-blue-600 bg-white",
+    "on-hold": "border border-orange-400 text-orange-500 bg-white",
+    inactive: "border border-orange-400 text-orange-500 bg-white",
+    cancelled: "border border-gray-400 text-gray-500 bg-white",
+    critical: "border border-red-400 text-red-500 bg-white",
+    postponed: "border border-purple-400 text-purple-500 bg-white",
+    finished: "border border-green-400 text-green-600 bg-white",
 };
 
 function StatusBadge({ status }) {
@@ -77,21 +79,24 @@ function SortIcon({ field, sortField, sortDir }) {
 const TABS = ["All", "Ongoing", "Cancelled", "Finished", "Postponed"];
 
 const TAB_MATCH = {
-    ongoing:   p => ["active", "ongoing"].includes(p.status?.toLowerCase()),
+    ongoing: p => ["active", "ongoing"].includes(p.status?.toLowerCase()),
     cancelled: p => p.status?.toLowerCase() === "cancelled",
-    finished:  p => ["completed", "finished"].includes(p.status?.toLowerCase()),
+    finished: p => ["completed", "finished"].includes(p.status?.toLowerCase()),
     postponed: p => ["on-hold", "postponed"].includes(p.status?.toLowerCase()),
 };
 
 // ─── Main Index ───────────────────────────────────────────────────────────────
 const ITEMS_PER_PAGE = 6;
 
+
 export default function Index({ projects = [] }) {
-    const [tab, setTab]           = useState("All");
-    const [search, setSearch]     = useState("");
+    const [tab, setTab] = useState("All");
+    const [search, setSearch] = useState("");
     const [sortField, setSortField] = useState(null);
-    const [sortDir, setSortDir]   = useState("asc");
-    const [page, setPage]         = useState(1);
+    const [sortDir, setSortDir] = useState("asc");
+    const [page, setPage] = useState(1);
+    const currentPath = window.location.pathname;
+
 
     const handleDelete = (id, name) => {
         if (confirm(`Are you sure you want to delete "${name}"?`)) {
@@ -107,10 +112,10 @@ export default function Index({ projects = [] }) {
 
     // Tab counts
     const counts = useMemo(() => ({
-        All:       projects.length,
-        Ongoing:   projects.filter(TAB_MATCH.ongoing).length,
+        All: projects.length,
+        Ongoing: projects.filter(TAB_MATCH.ongoing).length,
         Cancelled: projects.filter(TAB_MATCH.cancelled).length,
-        Finished:  projects.filter(TAB_MATCH.finished).length,
+        Finished: projects.filter(TAB_MATCH.finished).length,
         Postponed: projects.filter(TAB_MATCH.postponed).length,
     }), [projects]);
 
@@ -146,7 +151,7 @@ export default function Index({ projects = [] }) {
     }, [projects, tab, search, sortField, sortDir]);
 
     const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-    const paginated  = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     const ThCol = ({ field, label }) => (
         <th
@@ -208,8 +213,8 @@ export default function Index({ projects = [] }) {
 
                     {/* Search + view toggles */}
                     <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 w-52">
-                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <div className="relative w-52">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
                             </svg>
                             <input
@@ -217,7 +222,7 @@ export default function Index({ projects = [] }) {
                                 placeholder="Search projects"
                                 value={search}
                                 onChange={e => { setSearch(e.target.value); setPage(1); }}
-                                className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+                                className="w-full pl-10 pr-3 py-2 border-gray-200 border rounded-lg bg-white !ring-0 !shadow-none"
                             />
                         </div>
 
@@ -225,18 +230,20 @@ export default function Index({ projects = [] }) {
                         <div className="flex items-center gap-1">
                             {/* List view */}
                             <Link href={route('projects.index')}>
-                                <button className="p-2 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                    </svg>
+                                <button className={`p-2 rounded-lg border transition-colors ${currentPath === "/projects"
+                                        ? "bg-gray-800 text-white border-gray-800"
+                                        : "bg-white text-gray-500 border-gray-200"
+                                    }`}>
+                                    <List size={16} />
                                 </button>
                             </Link>
-                            {/* Card view — active */}
+
                             <Link href={route('projects.card')}>
-                                <button className="p-2 rounded-lg border border-gray-200 bg-gray-800 text-white transition-colors">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z" />
-                                    </svg>
+                                <button className={`p-2 rounded-lg border transition-colors ${currentPath === "/projects/card"
+                                        ? "bg-gray-800 text-white border-gray-800"
+                                        : "bg-white text-gray-500 border-gray-200"
+                                    }`}>
+                                    <LayoutGrid size={16} />
                                 </button>
                             </Link>
                         </div>
@@ -254,13 +261,13 @@ export default function Index({ projects = [] }) {
                         <table className="w-full">
                             <thead className="border-b border-gray-100 bg-gray-50">
                                 <tr>
-                                    <ThCol field="name"       label="Project Name" />
+                                    <ThCol field="name" label="Project Name" />
                                     <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">Assignees</th>
                                     <ThCol field="start_date" label="Start Date" />
-                                    <ThCol field="end_date"   label="Deadline" />
+                                    <ThCol field="end_date" label="Deadline" />
                                     <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">Task</th>
                                     <th className="px-4 py-3 text-left text-[11px] font-bold text-gray-500 uppercase tracking-wider">Progress</th>
-                                    <ThCol field="status"     label="Status" />
+                                    <ThCol field="status" label="Status" />
                                     <th className="px-4 py-3" />
                                 </tr>
                             </thead>
