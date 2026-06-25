@@ -47,6 +47,27 @@ class ProjectController extends Controller
         ]);
     }
 
+    // ─── Card View ───────────────────────────────────────────────
+    public function cardView()
+    {
+        $projects = Project::with([
+            'team',
+            'client',
+            'projectLead',
+            'users',
+            'tags',
+        ])->withCount([
+            'tasks',
+            'tasks as completed_tasks_count' => function ($q) {
+                $q->where('status', 'completed');
+            },
+        ])->get();
+
+        return Inertia::render('Projects/CardView', [
+            'projects' => $projects,
+        ]);
+    }
+
     // ─── Create ──────────────────────────────────────────────
     public function create()
     {

@@ -206,18 +206,40 @@ export default function Index({ projects = [] }) {
                         ))}
                     </div>
 
-                    {/* Search */}
-                    <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 w-64">
-                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
-                        </svg>
-                        <input
-                            type="text"
-                            placeholder="Search projects"
-                            value={search}
-                            onChange={e => { setSearch(e.target.value); setPage(1); }}
-                            className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
-                        />
+                    {/* Search + view toggles */}
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 w-52">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Search projects"
+                                value={search}
+                                onChange={e => { setSearch(e.target.value); setPage(1); }}
+                                className="flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder-gray-400"
+                            />
+                        </div>
+
+                        {/* View toggle */}
+                        <div className="flex items-center gap-1">
+                            {/* List view */}
+                            <Link href={route('projects.index')}>
+                                <button className="p-2 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 transition-colors">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                    </svg>
+                                </button>
+                            </Link>
+                            {/* Card view — active */}
+                            <Link href={route('projects.card')}>
+                                <button className="p-2 rounded-lg border border-gray-200 bg-gray-800 text-white transition-colors">
+                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z" />
+                                    </svg>
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 

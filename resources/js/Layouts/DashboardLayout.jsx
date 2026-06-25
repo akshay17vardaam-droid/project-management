@@ -55,7 +55,7 @@ const NAV = [
         children: [
             { label: "Create new", href: "/projects/create" },
             { label: "Project list view", href: "/projects" },
-            { label: "Project card view", href: "/projects?view=card" },
+            { label: "Project card view", href: "/projects/card" },
             { label: "Project board view", href: "/projects?view=board" },
             { label: "Project details", href: "/projects/details" },
         ],
