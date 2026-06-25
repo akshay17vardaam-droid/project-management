@@ -111,9 +111,9 @@ function FloatingInput({ label, value, onChange, type = "text", error }) {
                 }
             >
                 <label
-                    className={`absolute left-4 font-semibold tracking-widest uppercase pointer-events-none transition-all duration-150
+                    className={`absolute left-4 font-semibold tracking-tight uppercase pointer-events-none transition-all duration-150
                         ${raised
-                            ? "top-2 text-[10px]"
+                            ? "top-2 text-[10.24px]"
                             : "top-1/2 -translate-y-1/2 text-[12px]"
                         }
                         ${focused ? "text-blue-600" : "text-gray-500"}
@@ -158,11 +158,11 @@ function FloatingSelect({ label, value, onChange, options, error }) {
         <div ref={ref} className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className={`relative border rounded-md bg-white px-3.5 pt-5 pb-2 cursor-pointer h-11 transition-colors
+                className={`relative border rounded-md bg-white px-3.5 pt-5 cursor-pointer min-h-[46px] transition-colors
                     ${open ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}
             >
                 <label
-                    className={`absolute left-3.5 top-1.5 text-[10px] font-semibold tracking-widest uppercase pointer-events-none
+                    className={`absolute left-3.5 top-1.5 text-[10.24px] font-semibold tracking-tight uppercase pointer-events-none
                         ${open ? "text-blue-600" : "text-gray-400"}`}
                 >
                     {label}
@@ -214,7 +214,7 @@ function DateField({ label, value, onChange }) {
         <div ref={ref} className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className={`relative border rounded-md bg-white pl-10 pr-3.5 py-3 cursor-pointer min-h-[56px] flex flex-col justify-center transition-colors
+                className={`relative border rounded-md bg-white pl-10 pr-3.5 py-3 cursor-pointer min-h-[46px] flex flex-col justify-center transition-colors
                     ${open ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}
             >
                 {/* Calendar icon */}
@@ -222,7 +222,7 @@ function DateField({ label, value, onChange }) {
                     size={16}
                     className="absolute left-3.5 top-1/2 -translate-y-1/2"
                 />                
-                <div className={`text-[10px] font-semibold tracking-widest uppercase ${open ? "text-blue-600" : "text-gray-400"}`}>
+                <div className={`text-[10.24px] font-semibold tracking-tight uppercase ${open ? "text-blue-600" : "text-gray-400"}`}>
                     {label}
                 </div>
                 {display && <div className="text-sm text-gray-800 mt-0.5">{display}</div>}
@@ -251,10 +251,10 @@ function MultiSelect({ label, selected, onChange, options, placeholder }) {
         <div ref={ref} className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className={`relative border rounded-md bg-white px-3.5 pt-5 pb-2 cursor-pointer min-h-[56px] transition-colors
+                className={`relative border rounded-md bg-white px-3.5 pt-5 cursor-pointer min-h-[46px] transition-colors
                     ${open ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}
             >
-                <label className={`absolute left-3.5 transition-all duration-150 font-semibold tracking-widest uppercase pointer-events-none top-1.5 text-[10px]
+                <label className={`absolute left-3.5 transition-all duration-150 font-semibold tracking-tight uppercase pointer-events-none top-1.5 text-[10.24px]
                     ${open ? "text-blue-600" : "text-gray-400"}`}>
                     {label}
                 </label>
@@ -267,7 +267,7 @@ function MultiSelect({ label, selected, onChange, options, placeholder }) {
                             return item && (
                                 <span
                                     key={val}
-                                    className="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded bg-blue-50 border border-blue-200 text-xs text-blue-700"
+                                    className="inline-flex items-center gap-1 px-2 mt-1 rounded bg-blue-50 border border-blue-200 text-xs text-blue-700"
                                 >
                                     {item.label}
                                     <span
@@ -335,10 +335,10 @@ function TagInput({ allTags, selected, onChange }) {
         <div ref={ref} className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className={`border rounded-md bg-white px-3.5 pt-2 pb-2 cursor-pointer min-h-[56px] flex flex-wrap gap-2 items-center transition-colors
+                className={`border rounded-md bg-white px-3.5 pt-2 pb-2 cursor-pointer min-h-[46px] flex flex-wrap gap-2 items-center transition-colors
                     ${open ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}
             >
-                <div className={`text-[10px] font-semibold tracking-widest uppercase w-full ${open ? "text-blue-600" : "text-gray-400"}`}>
+                <div className={`text-[10.24px] font-semibold tracking-tight uppercase w-full ${open ? "text-blue-600" : "text-gray-400"}`}>
                     ADD TAGS
                 </div>
                 {selected.map(id => {
@@ -377,11 +377,11 @@ function TagInput({ allTags, selected, onChange }) {
 function FloatingTextarea({ label, value, onChange }) {
     const [focused, setFocused] = useState(false);
     return (
-        <div className={`relative border rounded-md bg-white px-3.5 pt-7 pb-2 transition-colors ${focused ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}>
+        <div className={`relative border rounded-md bg-white px-3 pt-7 pb-2 my-7 transition-colors ${focused ? "border-blue-600 shadow-[0_0_0_5px_rgba(38,132,255,.2)]" : "border-gray-300"}`}>
             <label
-                className={`absolute left-3.5 transition-all duration-150 font-semibold tracking-widest uppercase pointer-events-none
+                className={`absolute left-3.5 transition-all duration-150 font-semibold tracking-tight uppercase pointer-events-none
                     ${focused || value
-                        ? "top-1 text-[10px]"
+                        ? "top-1 text-[10.24px]"
                         : "top-2 text-[11px]"}
                     ${focused ? "text-blue-600 " : "text-gray-400"}`}
             >
@@ -392,7 +392,7 @@ function FloatingTextarea({ label, value, onChange }) {
                 onChange={e => onChange(e.target.value)}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                rows={5}
+                rows={2}
                 className="w-full bg-transparent border-none outline-none ring-0 shadow-none focus:border-none focus:outline-none focus:ring-0 text-sm text-gray-800 resize-y font-sans" />
         </div>
     );
@@ -433,7 +433,7 @@ export default function Create({ teams, clients, tags, users, admins, taskViews,
 
     return (
         <DashboardLayout>
-            <div>
+            <div className="m-10">
                 {/* Breadcrumb */}
                 <nav className="flex items-center gap-1.5 text-sm mb-3">
                     <Link href="/projects" className="text-blue-600 hover:underline">Projects</Link>
@@ -442,7 +442,7 @@ export default function Create({ teams, clients, tags, users, admins, taskViews,
                 </nav>
 
                 {/* Page Title */}
-                <h1 className="text-3xl font-extrabold text-gray-900 mb-6">Create a project</h1>
+                <h1 className="text-3xl font-black tracking-wider text-gray-900 mb-6 [paint-order:stroke_fill] [-webkit-text-stroke:0.75px_#111827]">Create a project</h1>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
